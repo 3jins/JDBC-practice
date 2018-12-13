@@ -1,4 +1,4 @@
-package experimental;
+package model;
 
 import java.sql.*;
 

@@ -1,4 +1,5 @@
-import experimental.JDBC;
+import model.JDBC;
+
 import java.sql.ResultSet;
 
 public class Main {
