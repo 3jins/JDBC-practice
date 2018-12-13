@@ -1,14 +1,12 @@
-package model;
-
 import java.sql.*;
 
-public class JDBC {
-    private static JDBC instance = null;
+public class HospitalEnterpriseModel {
+    private static HospitalEnterpriseModel instance = null;
     private Statement smt = null;
     private Connection conn = null;
     private ResultSet resultSet = null;
 
-    private JDBC() {
+    private HospitalEnterpriseModel() {
         String id = "user_201311308";
         String pw = "201311308";
         String url = "jdbc:mysql://117.16.137.108:3306/" +
@@ -30,8 +28,8 @@ public class JDBC {
         }
     }
 
-    public static JDBC getInstance() {
-        if (instance == null) instance = new JDBC();
+    public static HospitalEnterpriseModel getInstance() {
+        if (instance == null) instance = new HospitalEnterpriseModel();
         return instance;
     }
 
