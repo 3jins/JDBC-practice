@@ -1,39 +1,45 @@
+package model;
+
+import security.SQLInjectionSentinel;
+
 import java.sql.*;
 
-public class HospitalEnterpriseModel {
-    private static HospitalEnterpriseModel instance = null;
+public class JDBC {
+    private static JDBC instance = null;
     private Statement smt = null;
     private Connection conn = null;
-    private ResultSet resultSet = null;
+    private SQLInjectionSentinel sqlInjectionSentinel = new SQLInjectionSentinel();
 
-    private HospitalEnterpriseModel() {
+    private JDBC() {
         String id = "user_201311308";
         String pw = "201311308";
         String url = "jdbc:mysql://117.16.137.108:3306/" +
                 id + "?serverTimezone=Asia/Seoul&useUnicode=true&characterEncoding=utf8";
         try {
             conn = DriverManager.getConnection(url, id, pw);
-            System.out.println("Connected well.");
+        } catch (SQLException e) {
+            System.err.println("Failed to connect to the database: " + e.getMessage());
+        }
+    }
 
-            smt = conn.createStatement();
+    public static JDBC getInstance() {
+        if (instance == null) instance = new JDBC();
+        return instance;
+    }
+
+    public ResultSet sendQuery(String query) {
+        ResultSet resultSet = null;
+        query = sqlInjectionSentinel.refineQuery(query);
+        try {
             smt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            String sql = "select ID, tot_cred from student";
-            resultSet = smt.executeQuery(sql);
+            resultSet = smt.executeQuery(query);
             if (resultSet.isAfterLast()) {
                 System.out.println("Cursor is pointing to the last row");
                 resultSet.first();
             }
         } catch (SQLException e) {
-            System.err.println("getResultSet: " + e.getMessage());
+            System.err.println("Failed to send a query to the database: " + e.getMessage());
         }
-    }
-
-    public static HospitalEnterpriseModel getInstance() {
-        if (instance == null) instance = new HospitalEnterpriseModel();
-        return instance;
-    }
-
-    public ResultSet getResultSet() {
         return resultSet;
     }
 
