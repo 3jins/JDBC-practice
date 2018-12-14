@@ -1,4 +1,4 @@
-package model;
+package database;
 
 import security.SQLInjectionSentinel;
 
