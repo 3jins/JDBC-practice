@@ -27,15 +27,19 @@ public class JDBC {
         return instance;
     }
 
-    public ResultSet sendQuery(String query) {
+    public ResultSet sendQuery(String query, boolean isUpdate) {
         ResultSet resultSet = null;
         query = sqlInjectionSentinel.refineQuery(query);
         try {
             smt = conn.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
-            resultSet = smt.executeQuery(query);
-            if (resultSet.isAfterLast()) {
-                System.out.println("Cursor is pointing to the last row");
-                resultSet.first();
+            if(isUpdate) {
+                smt.executeUpdate(query);
+            } else {
+                resultSet = smt.executeQuery(query);
+                if (resultSet.isAfterLast()) {
+                    System.out.println("Cursor is pointing to the last row");
+                    resultSet.first();
+                }
             }
         } catch (SQLException e) {
             System.err.println("Failed to send a query to the database: " + e.getMessage());

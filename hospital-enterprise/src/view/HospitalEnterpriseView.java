@@ -1,8 +1,15 @@
 package view;
 
+import java.util.ArrayList;
+
 public class HospitalEnterpriseView {
-    private String[] mainSelectionItems = { "Sign in", "Sign up" };
-    private String[] roles = { "patient", "doctor", "nurse" };
+    private ArrayList<String> mainSelectionItems = new ArrayList<>();
+    private String[] roles = {"patient", "doctor", "nurse"};
+
+    public HospitalEnterpriseView() {
+        mainSelectionItems.add("Sign in");
+        mainSelectionItems.add("Sign up");
+    }
 
     public void showSelectionViewShell() {
         System.out.println("> ");
@@ -27,16 +34,47 @@ public class HospitalEnterpriseView {
         System.out.println();
     }
 
+    public void notifyBillCompleted() {
+        System.out.println("Bill is payed well :)");
+    }
+
+    public void notifyNoDoctor(String doctorId) {
+        System.out.println("[!] There is no doctor whose doctor id is " + doctorId + " in your department!");
+    }
+
     public void notifySignOut() {
         System.out.println("[+] You are signed out well.");
     }
 
-    public void setStates(boolean isSignedIn) {
-        this.mainSelectionItems[0] = isSignedIn ? "Sign out" : "Sign in";
+    public void setStates(boolean isSignedIn, String role) {
+        if (isSignedIn) {
+            this.mainSelectionItems.clear();
+            mainSelectionItems.add("Sign out");
+            switch(role) {
+                case "patient":
+                    mainSelectionItems.add("Check the bill");
+                    mainSelectionItems.add("Pay the bill");
+                    break;
+                case "doctor":
+                    mainSelectionItems.add("Check the appointments");
+                    mainSelectionItems.add("Claim the bill");
+                    break;
+                case "nurse":
+                    mainSelectionItems.add("Check the appointments");
+                    mainSelectionItems.add("Add an appointment");
+                    break;
+                default:
+                    return;
+            }
+        } else {
+            this.mainSelectionItems.clear();
+            mainSelectionItems.add("Sign in");
+            mainSelectionItems.add("Sign up");
+        }
     }
 
     public String[] getMainSelectionItems() {
-        return mainSelectionItems;
+        return mainSelectionItems.toArray(new String[0]);
     }
 
     public String[] getRoles() {
